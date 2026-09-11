@@ -6,7 +6,7 @@ function App() {
       <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
         Convert client files without leaving your browser
       </h1>
-      <p className="text-muted-foreground max-w-md text-lg text-pretty">
+      <p className="max-w-md text-lg text-pretty text-muted-foreground">
         Everything runs locally. Nothing gets uploaded.
       </p>
       <div className="flex flex-col gap-3 sm:flex-row">
