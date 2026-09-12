@@ -7,9 +7,12 @@ export function useWorker() {
   const [result, setResult] = useState<string | null>(null)
 
   useEffect(() => {
-    const w = new Worker(new URL("../workers/convert.worker.ts", import.meta.url), {
-      type: "module",
-    })
+    const w = new Worker(
+      new URL("../workers/convert.worker.ts", import.meta.url),
+      {
+        type: "module",
+      },
+    )
 
     w.onmessage = (e: MessageEvent<Response>) => {
       if (e.data.id !== jobId.current) return
