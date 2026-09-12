@@ -1,6 +1,6 @@
 import { Layout } from "./components/Layout"
 import { ThemeProvider } from "./contexts/ThemeProvider"
-import { Dashboard } from "./pages/dashboard"
+import { Dashboard } from "./pages/Dashboard"
 
 function App() {
   return (
