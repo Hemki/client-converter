@@ -146,9 +146,7 @@ function FileAttachmentRow({
       <AttachmentActions>
         {targets.length > 0 && (
           <Select<Format>
-            onValueChange={(target) =>
-              target && onRetarget(job.id, target.id)
-            }
+            onValueChange={(target) => target && onRetarget(job.id, target.id)}
           >
             <SelectPrimitive.Trigger
               ref={targetTriggerRef}
