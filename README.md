@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://hemki.github.io/client-converter/"><img src="https://img.shields.io/badge/demo-live-brightgreen" alt="Live demo"></a>
-  <a href="https://github.com/Hemki/client-converter/actions/workflows/deploy.yml"><img src="https://github.com/Hemki/client-converter/actions/workflows/deploy.yml/badge.svg" alt="Deploy status"></a>
+  <a href="https://github.com/Hemki/client-converter/actions/workflows/ci.yml"><img src="https://github.com/Hemki/client-converter/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/Hemki/client-converter" alt="License"></a>
   <img src="https://img.shields.io/badge/React-19-149eca?logo=react&logoColor=white" alt="React 19">
   <img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white" alt="TypeScript">
