@@ -2,6 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      ;(function () {
+        var stored = localStorage.getItem("vite-ui-theme")
+        var theme = stored || "dark"
+        var isDark =
+          theme === "dark" ||
+          (theme === "system" &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+        var root = document.documentElement
+        root.classList.toggle("dark", isDark)
+        root.style.colorScheme = isDark ? "dark" : "light"
+      })()
+    </script>
     <!-- <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" /> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>client-converter</title>
