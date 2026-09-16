@@ -11,7 +11,7 @@ export function Dashboard() {
           Convert files in your browser
         </h1>
         <p className="text-lg text-pretty text-muted-foreground">
-          Everything runs locally. Nothing gets uploaded.
+          All files stay on your device, and your device only.
         </p>
       </div>
 
