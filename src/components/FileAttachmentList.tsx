@@ -1,3 +1,4 @@
+import { Select as SelectPrimitive } from "@base-ui/react/select"
 import { DownloadIcon, FileIcon, FileInputIcon, XIcon } from "lucide-react"
 import {
   findCategory,
@@ -14,17 +15,10 @@ import {
   AttachmentDescription,
   AttachmentMedia,
   AttachmentTitle,
+  AttachmentTrigger,
 } from "./ui/attachment"
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-} from "./ui/combobox"
-import { InputGroupAddon } from "./ui/input-group"
 import { Progress } from "./ui/progress"
+import { Select, SelectContent, SelectItem } from "./ui/select"
 import { Spinner } from "./ui/spinner"
 
 function formatSize(bytes: number) {
@@ -85,6 +79,17 @@ export function FileAttachmentList({ jobs, onRemove, onRetarget }: Props) {
             className="w-full"
             key={job.id}
           >
+            {job.status === "done" && job.resultUrl && (
+              <AttachmentTrigger
+                aria-label={`Download ${job.file.name}`}
+                render={
+                  <a
+                    href={job.resultUrl}
+                    download={downloadNameFor(job.file, job.to)}
+                  />
+                }
+              />
+            )}
             <AttachmentMedia>
               {job.status === "processing" ? (
                 <Spinner className="size-5" />
@@ -104,34 +109,25 @@ export function FileAttachmentList({ jobs, onRemove, onRetarget }: Props) {
             </AttachmentContent>
             <AttachmentActions>
               {targets.length > 0 && (
-                <Combobox<Format>
-                  items={targets}
-                  itemToStringValue={(target) => target.label}
+                <Select<Format>
                   onValueChange={(target) =>
                     target && onRetarget(job.id, target.id)
                   }
-                  autoHighlight
                 >
-                  <ComboboxInput
-                    placeholder="Convert to..."
-                    className="w-36"
-                    showClear
+                  <SelectPrimitive.Trigger
+                    aria-label="Convert to a different format"
+                    render={<AttachmentAction />}
                   >
-                    <InputGroupAddon>
-                      <FileInputIcon />
-                    </InputGroupAddon>
-                  </ComboboxInput>
-                  <ComboboxContent>
-                    <ComboboxEmpty>No conversion option found.</ComboboxEmpty>
-                    <ComboboxList>
-                      {(item) => (
-                        <ComboboxItem key={item.id} value={item}>
-                          {item.label}
-                        </ComboboxItem>
-                      )}
-                    </ComboboxList>
-                  </ComboboxContent>
-                </Combobox>
+                    <FileInputIcon />
+                  </SelectPrimitive.Trigger>
+                  <SelectContent align="end">
+                    {targets.map((target) => (
+                      <SelectItem key={target.id} value={target}>
+                        {target.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               )}
               {job.status === "done" && job.resultUrl && (
                 <AttachmentAction
