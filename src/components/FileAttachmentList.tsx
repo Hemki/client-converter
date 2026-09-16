@@ -1,5 +1,6 @@
 import { Select as SelectPrimitive } from "@base-ui/react/select"
 import { DownloadIcon, FileIcon, FileInputIcon, XIcon } from "lucide-react"
+import { useRef } from "react"
 import {
   findCategory,
   formatOf,
@@ -66,104 +67,126 @@ export function FileAttachmentList({ jobs, onRemove, onRetarget }: Props) {
 
   return (
     <div className="flex-col space-y-2">
-      {jobs.map((job) => {
-        const Icon = findCategory(job.file)?.icon ?? FileIcon
-        const description =
-          job.status === "done" && job.result
-            ? [
-                `${formatOf(job.file)?.label} → ${formatById(job.file, job.to)?.label}`,
-                formatSize(job.result.size),
-              ]
-                .filter(Boolean)
-                .join(" • ")
-            : [
-                formatOf(job.file)?.label,
-                formatSize(job.file.size),
-                job.status === "error" ? job.error : null,
-              ]
-                .filter(Boolean)
-                .join(" • ")
-        const targets = targetsFor(job.file)
-        return (
-          <Attachment
-            state={ATTACHMENT_STATE[job.status]}
-            className="w-full"
-            key={job.id}
-          >
-            {job.status === "done" && job.resultUrl && (
-              <AttachmentTrigger
-                aria-label={`Download ${job.file.name}`}
-                render={
-                  <a
-                    href={job.resultUrl}
-                    download={downloadNameFor(job.file, job.to)}
-                  />
-                }
-              />
-            )}
-            <AttachmentMedia>
-              {job.status === "processing" ? (
-                <Spinner className="size-5" />
-              ) : (
-                <Icon className="size-5" />
-              )}
-            </AttachmentMedia>
-            <AttachmentContent>
-              <AttachmentTitle>{job.file.name}</AttachmentTitle>
-              <AttachmentDescription>
-                {job.status === "processing" ? (
-                  <Progress value={job.progress} className="mt-1" />
-                ) : (
-                  description
-                )}
-              </AttachmentDescription>
-            </AttachmentContent>
-            <AttachmentActions>
-              {targets.length > 0 && (
-                <Select<Format>
-                  onValueChange={(target) =>
-                    target && onRetarget(job.id, target.id)
-                  }
-                >
-                  <SelectPrimitive.Trigger
-                    aria-label="Convert to a different format"
-                    render={<AttachmentAction />}
-                  >
-                    <FileInputIcon />
-                  </SelectPrimitive.Trigger>
-                  <SelectContent align="end">
-                    {targets.map((target) => (
-                      <SelectItem key={target.id} value={target}>
-                        {target.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-              {job.status === "done" && job.resultUrl && (
-                <AttachmentAction
-                  aria-label={`Download ${job.file.name}`}
-                  nativeButton={false}
-                  render={
-                    <a
-                      href={job.resultUrl}
-                      download={downloadNameFor(job.file, job.to)}
-                    />
-                  }
-                >
-                  <DownloadIcon />
-                </AttachmentAction>
-              )}
-              <AttachmentAction
-                aria-label={`Remove file ${job.file.name}`}
-                onClick={() => onRemove(job.id)}
-              >
-                <XIcon />
-              </AttachmentAction>
-            </AttachmentActions>
-          </Attachment>
-        )
-      })}
+      {jobs.map((job) => (
+        <FileAttachmentRow
+          key={job.id}
+          job={job}
+          onRemove={onRemove}
+          onRetarget={onRetarget}
+        />
+      ))}
     </div>
+  )
+}
+
+function FileAttachmentRow({
+  job,
+  onRemove,
+  onRetarget,
+}: {
+  job: Job
+  onRemove: (id: number) => void
+  onRetarget: (id: number, to: string) => void
+}) {
+  const targetTriggerRef = useRef<HTMLButtonElement>(null)
+  const Icon = findCategory(job.file)?.icon ?? FileIcon
+  const description =
+    job.status === "done" && job.result
+      ? [
+          `${formatOf(job.file)?.label} → ${formatById(job.file, job.to)?.label}`,
+          formatSize(job.result.size),
+        ]
+          .filter(Boolean)
+          .join(" • ")
+      : [
+          formatOf(job.file)?.label,
+          formatSize(job.file.size),
+          job.status === "error" ? job.error : null,
+        ]
+          .filter(Boolean)
+          .join(" • ")
+  const targets = targetsFor(job.file)
+
+  return (
+    <Attachment state={ATTACHMENT_STATE[job.status]} className="w-full">
+      {job.status === "done" && job.resultUrl && (
+        <AttachmentTrigger
+          aria-label={`Download ${job.file.name}`}
+          render={
+            <a
+              href={job.resultUrl}
+              download={downloadNameFor(job.file, job.to)}
+            />
+          }
+        />
+      )}
+      {job.status === "init" && targets.length > 0 && (
+        <AttachmentTrigger
+          aria-label="Choose a format to convert to"
+          onClick={() => targetTriggerRef.current?.click()}
+        />
+      )}
+      <AttachmentMedia>
+        {job.status === "processing" ? (
+          <Spinner className="size-5" />
+        ) : (
+          <Icon className="size-5" />
+        )}
+      </AttachmentMedia>
+      <AttachmentContent>
+        <AttachmentTitle>{job.file.name}</AttachmentTitle>
+        <AttachmentDescription>
+          {job.status === "processing" ? (
+            <Progress value={job.progress} className="mt-1" />
+          ) : (
+            description
+          )}
+        </AttachmentDescription>
+      </AttachmentContent>
+      <AttachmentActions>
+        {targets.length > 0 && (
+          <Select<Format>
+            onValueChange={(target) =>
+              target && onRetarget(job.id, target.id)
+            }
+          >
+            <SelectPrimitive.Trigger
+              ref={targetTriggerRef}
+              aria-label="Convert to a different format"
+              render={<AttachmentAction />}
+            >
+              <FileInputIcon />
+            </SelectPrimitive.Trigger>
+            <SelectContent align="end">
+              {targets.map((target) => (
+                <SelectItem key={target.id} value={target}>
+                  {target.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+        {job.status === "done" && job.resultUrl && (
+          <AttachmentAction
+            aria-label={`Download ${job.file.name}`}
+            nativeButton={false}
+            render={
+              <a
+                href={job.resultUrl}
+                download={downloadNameFor(job.file, job.to)}
+              />
+            }
+          >
+            <DownloadIcon />
+          </AttachmentAction>
+        )}
+        <AttachmentAction
+          aria-label={`Remove file ${job.file.name}`}
+          onClick={() => onRemove(job.id)}
+        >
+          <XIcon />
+        </AttachmentAction>
+      </AttachmentActions>
+    </Attachment>
   )
 }
