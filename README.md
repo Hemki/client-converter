@@ -1,76 +1,49 @@
-# React + TypeScript + Vite
+<p align="center">
+  <img src="public/favicon.svg" width="120" alt="Client Converter logo">
+</p>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<h1 align="center">Client Converter</h1>
 
-Currently, two official plugins are available:
+<p align="center">
+  Convert your files entirely in the browser — nothing is ever uploaded.
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+<p align="center">
+  <a href="https://hemki.github.io/client-converter/"><img src="https://img.shields.io/badge/demo-live-brightgreen" alt="Live demo"></a>
+  <a href="https://github.com/Hemki/client-converter/actions/workflows/deploy.yml"><img src="https://github.com/Hemki/client-converter/actions/workflows/deploy.yml/badge.svg" alt="Deploy status"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/Hemki/client-converter" alt="License"></a>
+  <img src="https://img.shields.io/badge/React-19-149eca?logo=react&logoColor=white" alt="React 19">
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white" alt="Vite 8">
+  <img src="https://img.shields.io/badge/PWA-ready-5A0FC8?logo=pwa&logoColor=white" alt="PWA ready">
+</p>
 
-## React Compiler
+## About
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+Client Converter converts files locally in your browser using Web Workers and
+WebAssembly — nothing gets uploaded to a server. Drop in one or more files and
+convert them on the spot; images (PNG, JPEG, WebP, AVIF) are supported today,
+with more categories (documents, spreadsheets, audio, video) planned.
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+It's installable as a PWA and works offline.
 
-## Expanding the ESLint configuration
+**[Try it live →](https://hemki.github.io/client-converter/)**
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Getting started
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## Tech stack
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x"
-import reactDom from "eslint-plugin-react-dom"
+- [React](https://react.dev/) + TypeScript + [Vite](https://vite.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- Web Workers, with one worker per file conversion
+- WebAssembly image codecs via [jSquash](https://github.com/jamsinclair/jSquash)
+- [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) for offline/installable support
 
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## License
+
+MIT © Jonas Hemkendreis — see [LICENSE](LICENSE).
