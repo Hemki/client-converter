@@ -1,3 +1,14 @@
+import {
+  FileSpreadsheet,
+  FileText,
+  Image,
+  Music,
+  Type,
+  Video,
+  type LucideIcon,
+  VectorSquare,
+} from "lucide-react"
+
 export type Format = {
   id: string
   label: string
@@ -10,6 +21,7 @@ export type Category = {
   label: string
   /** Key of the converter module under src/converters/ that handles this category. */
   engine: string
+  icon: LucideIcon
   formats: Format[]
 }
 
@@ -18,6 +30,7 @@ export const CATEGORIES: Category[] = [
     id: "raster-image",
     label: "Images",
     engine: "image",
+    icon: Image,
     formats: [
       {
         id: "png",
@@ -49,6 +62,7 @@ export const CATEGORIES: Category[] = [
     id: "vector-image",
     label: "Vector graphics",
     engine: "vector",
+    icon: VectorSquare,
     formats: [
       {
         id: "svg",
@@ -68,6 +82,7 @@ export const CATEGORIES: Category[] = [
     id: "document",
     label: "Documents",
     engine: "document",
+    icon: FileText,
     formats: [
       {
         id: "pdf",
@@ -107,6 +122,7 @@ export const CATEGORIES: Category[] = [
     id: "spreadsheet",
     label: "Spreadsheets",
     engine: "spreadsheet",
+    icon: FileSpreadsheet,
     formats: [
       {
         id: "xlsx",
@@ -134,6 +150,7 @@ export const CATEGORIES: Category[] = [
     id: "audio",
     label: "Audio",
     engine: "audio",
+    icon: Music,
     formats: [
       {
         id: "mp3",
@@ -165,6 +182,7 @@ export const CATEGORIES: Category[] = [
     id: "video",
     label: "Video",
     engine: "video",
+    icon: Video,
     formats: [
       {
         id: "mp4",
@@ -190,6 +208,7 @@ export const CATEGORIES: Category[] = [
     id: "font",
     label: "Fonts",
     engine: "font",
+    icon: Type,
     formats: [
       {
         id: "ttf",

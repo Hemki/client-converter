@@ -1,7 +1,8 @@
 import { useDropzone } from "react-dropzone"
-import { Upload, File as FileIcon, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Upload } from "lucide-react"
 import { cn } from "@/lib/utils"
+import type { Job } from "@/hooks/useConverter"
+import { FileAttachmentList } from "./FileAttachmentList"
 
 const MAX_SIZE = 1024 * 1024 * 512 // 512 MB
 
@@ -18,12 +19,12 @@ function formatSize(bytes: number) {
 }
 
 type Props = {
-  files: File[]
+  jobs: Job[]
   onFilesAdded: (files: File[]) => void
-  onRemove: (file: File) => void
+  onRemove: (id: number) => void
 }
 
-export function FileDropzone({ files, onFilesAdded, onRemove }: Props) {
+export function FileDropzone({ jobs, onFilesAdded, onRemove }: Props) {
   const { getRootProps, getInputProps, isDragActive, fileRejections } =
     useDropzone({
       onDrop: (accepted) => accepted.length > 0 && onFilesAdded(accepted),
@@ -67,33 +68,7 @@ export function FileDropzone({ files, onFilesAdded, onRemove }: Props) {
         </p>
       )}
 
-      {files.length > 0 && (
-        <ul className="space-y-2">
-          {files.map((file, i) => (
-            <li
-              key={`${file.name}-${file.size}-${i}`}
-              className="flex items-center gap-3 rounded-lg border border-input bg-card px-4 py-3"
-            >
-              <div className="rounded-md bg-muted p-2 text-muted-foreground">
-                <FileIcon className="size-4" />
-              </div>
-              <div className="min-w-0 flex-1 text-left">
-                <p className="truncate text-sm font-medium">{file.name}</p>
-                <p className="text-xs text-muted-foreground">
-                  {formatSize(file.size)}
-                </p>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onRemove(file)}
-              >
-                <X className="size-4" />
-              </Button>
-            </li>
-          ))}
-        </ul>
-      )}
+      <FileAttachmentList jobs={jobs} onRemove={onRemove} />
     </div>
   )
 }

@@ -22,12 +22,9 @@ export function Dashboard() {
       </div>
 
       <FileDropzone
-        files={jobs.map((job) => job.file)}
+        jobs={jobs}
         onFilesAdded={(files) => files.forEach((file) => convert(file))}
-        onRemove={(file) => {
-          const job = jobs.find((j) => j.file === file)
-          if (job) remove(job.id)
-        }}
+        onRemove={remove}
       />
 
       {jobs.length > 0 && (
