@@ -1,9 +1,14 @@
 import { FileDropzone } from "@/components/FileDropZone"
 import { Card, CardContent } from "@/components/ui/card"
 import { useConverter } from "@/hooks/useConverter"
+import { targetsFor } from "@/converters/config"
+
+function outputName(file: File, to: string) {
+  return `${file.name.replace(/\.[^./]+$/, "")}.${to}`
+}
 
 export function Dashboard() {
-  const { jobs, convert, remove } = useConverter()
+  const { jobs, convert, retarget, remove } = useConverter()
 
   return (
     <div className="w-full max-w-xl space-y-8">
@@ -18,7 +23,7 @@ export function Dashboard() {
 
       <FileDropzone
         files={jobs.map((job) => job.file)}
-        onFilesAdded={(files) => files.forEach((file) => convert(file, "TBD"))}
+        onFilesAdded={(files) => files.forEach((file) => convert(file))}
         onRemove={(file) => {
           const job = jobs.find((j) => j.file === file)
           if (job) remove(job.id)
@@ -27,15 +32,53 @@ export function Dashboard() {
 
       {jobs.length > 0 && (
         <div className="space-y-2">
-          {jobs.map((job) => (
-            <Card key={job.id}>
-              <CardContent className="font-mono text-sm break-all text-muted-foreground">
-                {job.file.name} — {job.status}
-                {job.status === "done" && `: ${job.result}`}
-                {job.status === "error" && `: ${job.error}`}
-              </CardContent>
-            </Card>
-          ))}
+          {jobs.map((job) => {
+            const targets = targetsFor(job.file)
+            return (
+              <Card key={job.id}>
+                <CardContent className="flex items-center gap-3 text-sm">
+                  <span className="min-w-0 flex-1 truncate font-mono text-muted-foreground">
+                    {job.file.name}
+                  </span>
+
+                  {targets.length > 0 && (
+                    <select
+                      className="rounded-md border border-input bg-transparent px-2 py-1 text-sm"
+                      value={job.to}
+                      onChange={(e) => retarget(job.id, e.target.value)}
+                    >
+                      {targets.map((format) => (
+                        <option key={format.id} value={format.id}>
+                          {format.label}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+
+                  {job.status === "queued" && (
+                    <span className="text-muted-foreground">Queued</span>
+                  )}
+                  {job.status === "processing" && (
+                    <span className="text-muted-foreground">
+                      Converting… {job.progress}%
+                    </span>
+                  )}
+                  {job.status === "error" && (
+                    <span className="text-destructive">{job.error}</span>
+                  )}
+                  {job.status === "done" && job.resultUrl && (
+                    <a
+                      className="text-primary underline"
+                      href={job.resultUrl}
+                      download={outputName(job.file, job.to)}
+                    >
+                      Download
+                    </a>
+                  )}
+                </CardContent>
+              </Card>
+            )
+          })}
         </div>
       )}
     </div>
