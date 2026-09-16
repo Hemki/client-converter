@@ -36,6 +36,18 @@ npm install
 npm run dev
 ```
 
+## Testing
+
+```bash
+npm test
+```
+
+Runs on [Vitest](https://vitest.dev/). Config-routing logic (`src/converters/config.ts`)
+is covered by plain unit tests. The image converter (`src/converters/image.ts`) is
+covered end-to-end: real jSquash/WASM codecs decode and re-encode a generated test
+image across every supported PNG/JPEG/WebP/AVIF pair, then an independent decode
+verifies the output is a valid image of the right size — no mocking of the codecs.
+
 ## Tech stack
 
 - [React](https://react.dev/) + TypeScript + [Vite](https://vite.dev/)
