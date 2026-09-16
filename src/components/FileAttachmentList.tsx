@@ -33,9 +33,12 @@ function formatSize(bytes: number) {
   return `${n.toFixed(1)} ${units[i]}`
 }
 
+function formatById(file: File, formatId: string) {
+  return findCategory(file)?.formats.find((f) => f.id === formatId)
+}
+
 function downloadNameFor(file: File, formatId: string) {
-  const ext = findCategory(file)?.formats.find((f) => f.id === formatId)
-    ?.extensions[0]
+  const ext = formatById(file, formatId)?.extensions[0]
   if (!ext) return file.name
   return `${file.name.replace(/\.[^./]+$/, "")}.${ext}`
 }
@@ -65,13 +68,21 @@ export function FileAttachmentList({ jobs, onRemove, onRetarget }: Props) {
     <div className="flex-col space-y-2">
       {jobs.map((job) => {
         const Icon = findCategory(job.file)?.icon ?? FileIcon
-        const description = [
-          formatOf(job.file)?.label,
-          formatSize(job.file.size),
-          job.status === "error" ? job.error : null,
-        ]
-          .filter(Boolean)
-          .join(" • ")
+        const description =
+          job.status === "done" && job.result
+            ? [
+                `${formatOf(job.file)?.label} → ${formatById(job.file, job.to)?.label}`,
+                formatSize(job.result.size),
+              ]
+                .filter(Boolean)
+                .join(" • ")
+            : [
+                formatOf(job.file)?.label,
+                formatSize(job.file.size),
+                job.status === "error" ? job.error : null,
+              ]
+                .filter(Boolean)
+                .join(" • ")
         const targets = targetsFor(job.file)
         return (
           <Attachment
