@@ -22,9 +22,15 @@ type Props = {
   jobs: Job[]
   onFilesAdded: (files: File[]) => void
   onRemove: (id: number) => void
+  onRetarget: (id: number, to: string) => void
 }
 
-export function FileDropzone({ jobs, onFilesAdded, onRemove }: Props) {
+export function FileDropzone({
+  jobs,
+  onFilesAdded,
+  onRemove,
+  onRetarget,
+}: Props) {
   const { getRootProps, getInputProps, isDragActive, fileRejections } =
     useDropzone({
       onDrop: (accepted) => accepted.length > 0 && onFilesAdded(accepted),
@@ -68,7 +74,11 @@ export function FileDropzone({ jobs, onFilesAdded, onRemove }: Props) {
         </p>
       )}
 
-      <FileAttachmentList jobs={jobs} onRemove={onRemove} />
+      <FileAttachmentList
+        jobs={jobs}
+        onRemove={onRemove}
+        onRetarget={onRetarget}
+      />
     </div>
   )
 }

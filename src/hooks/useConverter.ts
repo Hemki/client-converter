@@ -4,7 +4,7 @@ import { targetsFor } from "@/converters/config"
 
 const MAX_CONCURRENCY = Math.max(1, navigator.hardwareConcurrency || 4)
 
-export type JobStatus = "queued" | "processing" | "done" | "error"
+export type JobStatus = "init" | "queued" | "processing" | "done" | "error"
 
 export type Job = {
   id: number
@@ -90,26 +90,22 @@ export function useConverter() {
     [runNext],
   )
 
-  const convert = useCallback(
-    (file: File) => {
-      const id = nextId.current++
-      const to = targetsFor(file)[0]?.id
-      const job: Job = {
-        id,
-        file,
-        to: to ?? "",
-        status: to ? "queued" : "error",
-        progress: 0,
-        result: null,
-        resultUrl: null,
-        error: to ? null : "Unsupported file type",
-      }
-      setJobs((prev) => [...prev, job])
-      if (to) enqueue(job)
-      return id
-    },
-    [enqueue],
-  )
+  const convert = useCallback((file: File) => {
+    const id = nextId.current++
+    const to = targetsFor(file)[0]?.id
+    const job: Job = {
+      id,
+      file,
+      to: to ?? "",
+      status: to ? "init" : "error",
+      progress: 0,
+      result: null,
+      resultUrl: null,
+      error: to ? null : "Unsupported file type",
+    }
+    setJobs((prev) => [...prev, job])
+    return id
+  }, [])
 
   const cancelJob = useCallback((id: number) => {
     queueRef.current = queueRef.current.filter((j) => j.id !== id)

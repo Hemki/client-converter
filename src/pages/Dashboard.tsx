@@ -25,6 +25,7 @@ export function Dashboard() {
         jobs={jobs}
         onFilesAdded={(files) => files.forEach((file) => convert(file))}
         onRemove={remove}
+        onRetarget={retarget}
       />
 
       {jobs.length > 0 && (
