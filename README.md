@@ -22,8 +22,9 @@
 
 Client Converter converts files locally in your browser using Web Workers and
 WebAssembly — nothing gets uploaded to a server. Drop in one or more files and
-convert them on the spot; images (PNG, JPEG, WebP, AVIF) are supported today,
-with more categories (documents, spreadsheets, audio, video) planned.
+convert them on the spot; images (PNG, JPEG, WebP, AVIF) and SVG rendering
+(SVG → PNG/JPEG/WebP/AVIF) are supported today, with more categories
+(documents, spreadsheets, audio, video) planned.
 
 It's installable as a PWA and works offline.
 
@@ -54,6 +55,7 @@ verifies the output is a valid image of the right size — no mocking of the cod
 - [Tailwind CSS](https://tailwindcss.com/)
 - Web Workers, with one worker per file conversion
 - WebAssembly image codecs via [jSquash](https://github.com/jamsinclair/jSquash)
+- SVG rendering via [resvg-wasm](https://github.com/yisibl/resvg-js)
 - [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) for offline/installable support
 
 ## License

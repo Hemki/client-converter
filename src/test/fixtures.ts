@@ -24,3 +24,8 @@ export async function makeTestPngFile(
   const encoded = await encodePng(imageData)
   return new File([encoded], name, { type: "image/png" })
 }
+
+export function makeTestSvgFile(name = "test.svg", size = 16): File {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}"><rect width="${size}" height="${size}" fill="#dc2828"/></svg>`
+  return new File([svg], name, { type: "image/svg+xml" })
+}

@@ -59,6 +59,9 @@ export const CATEGORIES: Category[] = [
     ],
   },
   {
+    // SVG only for now — it renders (via resvg-wasm) to the raster formats
+    // below. EPS is deferred: the only capable renderer is Ghostscript
+    // compiled to WASM, which is both AGPL-licensed and multiple megabytes.
     id: "vector-image",
     label: "Vector graphics",
     engine: "vector",
@@ -71,10 +74,28 @@ export const CATEGORIES: Category[] = [
         mimeTypes: ["image/svg+xml"],
       },
       {
-        id: "eps",
-        label: "EPS",
-        extensions: ["eps"],
-        mimeTypes: ["application/postscript"],
+        id: "png",
+        label: "PNG",
+        extensions: ["png"],
+        mimeTypes: ["image/png"],
+      },
+      {
+        id: "jpeg",
+        label: "JPEG",
+        extensions: ["jpg", "jpeg"],
+        mimeTypes: ["image/jpeg"],
+      },
+      {
+        id: "webp",
+        label: "WebP",
+        extensions: ["webp"],
+        mimeTypes: ["image/webp"],
+      },
+      {
+        id: "avif",
+        label: "AVIF",
+        extensions: ["avif"],
+        mimeTypes: ["image/avif"],
       },
     ],
   },
